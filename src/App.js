@@ -62,6 +62,9 @@ export default class App extends React.Component {
         }
       })
 
+      // 이벤트 불러오기
+      var result = this.fetch_events();
+
       this.showAlert('지갑이 연결되었습니다.');
     } else {
       this.showAlert('지갑이 연결에 실패하였습니다.');
@@ -85,6 +88,48 @@ export default class App extends React.Component {
       totalSoldTickets: totalSoldTickets,
       hasTicket: hasTicket
     }
+  }
+
+  // 이벤트 조회
+  fetch_events() {
+    this.contract.getPastEvents('PaidTicket', {
+      fromBlock: 0,
+      toBlock: 'latest'
+    }).then(function(events){
+      console.log('이벤트 조회');
+      console.log(events);
+    });
+  }
+
+  // 티켓 구매하기
+  async buyTicket() {
+    var address = this.state.wallet.walletAddress;
+
+    var result = await this.contract.methods.buyTicket().send({
+      from: address,
+      value: this.web3.utils.toWei('0.01', 'ether'),
+      gas: 300000,
+      gasPrice: this.web3.utils.toWei('12', 'gwei')
+    });
+
+    console.log(result);
+
+    var result = await this.fetch_contract_info(address);
+    var balance = await this.web3.eth.getBalance(address);
+
+    this.setState({
+      wallet: {
+        walletAddress: address,
+        balance: balance,
+        connected: true,
+        hasTicket: result.hasTicket
+      },
+      info: {
+        round: result.round,
+        winPrize: result.winPrize,
+        totalSoldTickets: result.totalSoldTickets
+      }
+    })
   }
 
   // '당첨금 확인' 버튼 클릭시 실행 됨
@@ -211,7 +256,19 @@ export default class App extends React.Component {
             </div>
           </div>
 
-          {/* 지갑 연결하기  */}
+          {/* 티켓 구매하기  */}
+          <div className="col-md-12 mt-4">
+            <div className="card">
+              <div className="card-header">
+                티켓 구매하기
+              </div>
+              <div className="card-body">
+                <button type="button" className="btn btn-primary" onClick={ () => this.buyTicket() }>티켓 구매하기</button>
+              </div>
+            </div>
+          </div>
+
+          {/* 당첨금 확인  */}
           <div className="col-md-12 mt-4">
             <div className="card">
               <div className="card-header">
