@@ -7,8 +7,10 @@ export default class App extends React.Component {
       message: '지갑이 연결되었습니다!'
     },
     wallet: {
-      walletAddress: '0x1761b9c95026d1d3105E1eA632bCC5c0B23E7999',
-      hasTicket: true
+      walletAddress: '',
+      balance: 0,
+      hasTicket: false,
+      connected: false
     },
     info: {
       round: 0,
@@ -19,9 +21,39 @@ export default class App extends React.Component {
     winnerHistory: []
   }
 
+  _web3 = null;
+
   // '지갑 연동하기' 버튼 클릭시 실행 됨
-  connect() {
-    this.showAlert('지갑이 연결되었습니다.');
+  async connect() {
+    // Web3 패키지 로딩
+    const Web3 = require('web3');
+
+    // 주입된 web3가 존재한다면
+    if(window.ethereum) {
+      this._web3 = new Web3(window.ethereum);
+      // Metamask에 접근 요청
+      await window.ethereum.enable();
+
+      // 지갑 주소 가져오기
+      var address = await this._web3.eth.getAccounts();
+      address = address[0];
+
+      // 현재 잔액 가져오기
+      var balance = await this._web3.eth.getBalance(address);
+
+      // 화면 변경
+      this.setState({
+        wallet: {
+          walletAddress: address,
+          balance: balance,
+          connected: true
+        }
+      })
+
+      this.showAlert('지갑이 연결되었습니다.');
+    } else {
+      this.showAlert('지갑이 연결에 실패하였습니다.');
+    }
   }
 
   // '당첨금 확인' 버튼 클릭시 실행 됨
@@ -91,7 +123,9 @@ export default class App extends React.Component {
                 지갑 연동하기
               </div>
               <div className="card-body">
-                <button type="button" className="btn btn-primary" onClick={ () => this.connect() }>지갑 연결 하기</button>
+                <button type="button" className="btn btn-secondary" disabled={ this.state.wallet.connected } onClick={ () => this.connect() }>
+                  지갑 연결 하기
+                </button>
               </div>
             </div>
           </div>
@@ -132,6 +166,10 @@ export default class App extends React.Component {
                   <div class="form-group row">
                     <label class="col-sm-4">지갑주소</label>
                     <div class="col-sm-8">{ this.state.wallet.walletAddress }</div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-sm-4">현재 잔액</label>
+                    <div class="col-sm-8">{ this.state.wallet.balance } Ether</div>
                   </div>
                   <div class="form-group row">
                     <label class="col-sm-4">티켓 보유 여부</label>
