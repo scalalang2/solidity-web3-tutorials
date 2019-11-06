@@ -89,7 +89,7 @@ export default class App extends React.Component {
 
   // '당첨금 확인' 버튼 클릭시 실행 됨
   check() {
-
+    
   }
 
   // 상단 메시지 노출 함수
