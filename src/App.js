@@ -21,7 +21,10 @@ export default class App extends React.Component {
     winnerHistory: []
   }
 
-  _web3 = null;
+  contract_abi = null;
+  contract_address = null;
+  web3 = null;
+  contract = null;
 
   // '지갑 연동하기' 버튼 클릭시 실행 됨
   async connect() {
@@ -30,29 +33,57 @@ export default class App extends React.Component {
 
     // 주입된 web3가 존재한다면
     if(window.ethereum) {
-      this._web3 = new Web3(window.ethereum);
+      this.web3 = new Web3(window.ethereum);
       // Metamask에 접근 요청
       await window.ethereum.enable();
 
       // 지갑 주소 가져오기
-      var address = await this._web3.eth.getAccounts();
+      var address = await this.web3.eth.getAccounts();
       address = address[0];
 
       // 현재 잔액 가져오기
-      var balance = await this._web3.eth.getBalance(address);
+      var balance = await this.web3.eth.getBalance(address);
+
+      // 컨트랙트 정보 가져오기
+      var result = await this.fetch_contract_info(address);
 
       // 화면 변경
       this.setState({
         wallet: {
           walletAddress: address,
           balance: balance,
-          connected: true
+          connected: true,
+          hasTicket: result.hasTicket
+        },
+        info: {
+          round: result.round,
+          winPrize: result.winPrize,
+          totalSoldTickets: result.totalSoldTickets
         }
       })
 
       this.showAlert('지갑이 연결되었습니다.');
     } else {
       this.showAlert('지갑이 연결에 실패하였습니다.');
+    }
+  }
+
+  // 컨트랙트 정보 조회 
+  async fetch_contract_info(address){
+    this.contract_abi = require('./contract_abi.json');
+    this.contract_address = '0x24410E953A9Fc7E7c194d4C92899bEE8B4C8Bef3';
+    this.contract = new this.web3.eth.Contract(this.contract_abi, this.contract_address);
+
+    var round = await this.contract.methods.round().call();
+    var winPrize = await this.contract.methods.winPrize().call();
+    var totalSoldTickets = await this.contract.methods.totalSoldTickets().call();
+    var hasTicket = await this.contract.methods.hasTicket(address).call();
+
+    return {
+      round: round,
+      winPrize: winPrize,
+      totalSoldTickets: totalSoldTickets,
+      hasTicket: hasTicket
     }
   }
 
