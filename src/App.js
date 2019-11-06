@@ -123,17 +123,17 @@ export default class App extends React.Component {
               </div>
               <div className="card-body">
                 <form>
-                  <div class="form-group row">
-                    <label class="col-sm-4">라운드</label>
-                    <div class="col-sm-8">{ this.state.info.round }</div>
+                  <div className="form-group row">
+                    <label className="col-sm-4">라운드</label>
+                    <div className="col-sm-8">{ this.state.info.round }</div>
                   </div>
-                  <div class="form-group row">
-                    <label class="col-sm-4">당첨금</label>
-                    <div class="col-sm-8">{ this.state.info.winPrize } Ether</div>
+                  <div className="form-group row">
+                    <label className="col-sm-4">당첨금</label>
+                    <div className="col-sm-8">{ this.state.info.winPrize } Ether</div>
                   </div>
-                  <div class="form-group row">
-                    <label class="col-sm-4">총 판매된 티켓</label>
-                    <div class="col-sm-8">{ this.state.info.totalSoldTickets } 티켓</div>
+                  <div className="form-group row">
+                    <label className="col-sm-4">총 판매된 티켓</label>
+                    <div className="col-sm-8">{ this.state.info.totalSoldTickets } 티켓</div>
                   </div>
                 </form>
               </div>
@@ -148,17 +148,17 @@ export default class App extends React.Component {
               </div>
               <div className="card-body">
                 <form>
-                  <div class="form-group row">
-                    <label class="col-sm-4">지갑주소</label>
-                    <div class="col-sm-8">{ this.state.wallet.walletAddress }</div>
+                  <div className="form-group row">
+                    <label className="col-sm-4">지갑주소</label>
+                    <div className="col-sm-8">{ this.state.wallet.walletAddress }</div>
                   </div>
-                  <div class="form-group row">
-                    <label class="col-sm-4">잔액 조회</label>
-                    <div class="col-sm-8">{ this.state.wallet.balance } Ether</div>
+                  <div className="form-group row">
+                    <label className="col-sm-4">잔액 조회</label>
+                    <div className="col-sm-8">{ this.state.wallet.balance } Ether</div>
                   </div>
-                  <div class="form-group row">
-                    <label class="col-sm-4">티켓 보유 여부</label>
-                    <div class="col-sm-8">{ this.state.wallet.hasTicket ? '티켓 보유 중' : '티켓 미보유 중' }</div>
+                  <div className="form-group row">
+                    <label className="col-sm-4">티켓 보유 여부</label>
+                    <div className="col-sm-8">{ this.state.wallet.hasTicket ? '티켓 보유 중' : '티켓 미보유 중' }</div>
                   </div>
                 </form>
               </div>
@@ -195,7 +195,7 @@ export default class App extends React.Component {
               <div className="card-header">
                 역대 판매 현황
               </div>
-              <table class="table">
+              <table className="table">
                 <thead>
                   <tr>
                     <th scope="col">지갑 주소</th>
@@ -215,7 +215,7 @@ export default class App extends React.Component {
               <div className="card-header">
                 역대 당첨 현황
               </div>
-              <table class="table">
+              <table className="table">
                 <thead>
                   <tr>
                     <th scope="col"># 라운드</th>
