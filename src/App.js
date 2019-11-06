@@ -8,7 +8,9 @@ export default class App extends React.Component {
     },
     wallet: {
       walletAddress: '0x1761b9c95026d1d3105E1eA632bCC5c0B23E7999',
-      hasTicket: true
+      balance: 0,
+      hasTicket: true,
+      connected: false
     },
     info: {
       round: 0,
@@ -21,6 +23,11 @@ export default class App extends React.Component {
 
   // '지갑 연동하기' 버튼 클릭시 실행 됨
   connect() {
+    this.setState({
+      wallet: {
+        connected: true
+      }
+    })
     this.showAlert('지갑이 연결되었습니다.');
   }
 
@@ -91,7 +98,14 @@ export default class App extends React.Component {
                 지갑 연동하기
               </div>
               <div className="card-body">
-                <button type="button" className="btn btn-primary" onClick={ () => this.connect() }>지갑 연결 하기</button>
+                { this.state.wallet.connected && (
+                  <button type="button" className="btn btn-secondary" disabled={true}>지갑 연결 됨</button>
+                ) }
+                {
+                  !this.state.wallet.connected && (
+                    <button type="button" className="btn btn-primary" onClick={() => this.connect()}>지갑 연결 하기</button>
+                  )
+                }
               </div>
             </div>
           </div>
@@ -132,6 +146,10 @@ export default class App extends React.Component {
                   <div class="form-group row">
                     <label class="col-sm-4">지갑주소</label>
                     <div class="col-sm-8">{ this.state.wallet.walletAddress }</div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-sm-4">잔액 조회</label>
+                    <div class="col-sm-8">{ this.state.wallet.balance } Ether</div>
                   </div>
                   <div class="form-group row">
                     <label class="col-sm-4">티켓 보유 여부</label>
